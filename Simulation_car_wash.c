@@ -44,9 +44,7 @@ void hadle_sigint(){
 	for(int i=0;i<MAX_CARS;i++)
 	{
 		if(idTread[i]!=NULL)
-		{
 			printf("Car (trhead) %p exited from washing facility\n",idTread[i]);	
-		}
 	}
 	printf("\t Washing facility is closed...\n");
 	exit(0);
@@ -55,7 +53,7 @@ void hadle_sigint(){
 float ran_expo(float lambda){
     float u;
     u = rand() / (RAND_MAX + 1.0);
-   return  -log(10) / lambda;
+    return  -log(10) / lambda;
 }
 void *assignSpace(void *threadid){
 	// When thread goes in, it checks if the washing facility is full.
@@ -89,9 +87,7 @@ void *assignSpace(void *threadid){
 	}
 	pthread_mutex_unlock(&mutexin);
 	pthread_mutex_lock(&mutexout);
-
 	srand(time(NULL));
-
 	sleep(ran_expo(-0.7));
 	counter=0;
 	washingFacility[jb]=0;
@@ -104,11 +100,9 @@ void *assignSpace(void *threadid){
 	carLeves++;
 	printf("Car (thread) %p leaves washing facility, %d vacancies\n",threadid, totalSlots);
 
-
 	// As soon as the thread finishes a signal is emitted to the threads waiting.
 	pthread_cond_signal(&leaveSpace);
 	pthread_mutex_unlock(&mutexout);
-
 	pthread_exit(0);
 }
 
@@ -142,8 +136,7 @@ void main (int argc, char *argv[]){
 		while (numbOfVehicle<12){
 			sleep(ran_expo(-1.5));
 			printf("Creating thread for car %d\n", numbOfVehicle);
-						// Assign a car to a position if possible in assignSpace
-
+			// Assign a car to a position if possible in assignSpace
 			rc = pthread_create(&threads[numbOfVehicle], NULL, assignSpace, (void *)(intptr_t)numbOfVehicle);
 
 			if (rc){
@@ -154,21 +147,16 @@ void main (int argc, char *argv[]){
 				
 		}
 
-		for(int i=1;i<12;i++){
+		for(int i=1;i<12;i++)
 			pthread_join(threads[i],NULL);
-
-		}
 		printf("total number of vehicles washed: %d\n",carLeves);
 		//printf(" \nrrrr %f\n",time_taken);
 		printf("Average waiting time in queue of cars wasshed %f\n",time_taken/carLeves);
 	}
 	else{ /* Parent */
-
 		sleep(30); /* Pause for 30 second */
 		kill(pid,SIGINT);
-		kill(pid,SIGQUIT);
-		
-		
+		kill(pid,SIGQUIT);	
 	}
 }
 
