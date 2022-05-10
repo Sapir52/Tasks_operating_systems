@@ -19,9 +19,8 @@
 
 int string_in(char string [], const char** strings, size_t strings_num) {
     for (size_t i = 0; i < strings_num; i++) {
-        if (!strcmp(string, strings[i])) {
+        if (!strcmp(string, strings[i]))
             return i;
-        }
     }
     return -1;
 }
@@ -93,9 +92,7 @@ void cheakCommendsPipeInCmds(char* st,const char** cmds, size_t lenCmds){
 	for (int i=0;i<strlen(st);i++)
 	{
 		if(st[i]!='|')
-		{
 			commend1[i]=st[i];
-		}
 		if(st[i]=='|')
 			index=i;
 	}
@@ -178,11 +175,10 @@ int main(int argc, char*argv[]){
 			
 		child_pid = fork();	
 		if (child_pid < 0) {
-		    perror("Fork failed");
-		    exit(1);
+			perror("Fork failed");
+		        exit(1);
 		}
 		if (child_pid == 0) {
-
 			//commamd is pipe
 			int isPipe = 0;
 			int countPipe=0;
@@ -196,61 +192,41 @@ int main(int argc, char*argv[]){
 				
 			}
 			if(isPipe==1 && countPipe==1)
-			{
-				cheakCommendsPipeInCmds(st2, cmds, lenCmds);	
-			}			
+				cheakCommendsPipeInCmds(st2, cmds, lenCmds);			
 			else if(isPipe==1 && countPipe!=1)
 				printf("pipe command is not supported\n");
-			if(indexCmds==0 && isPipe==0){
+			if(indexCmds==0 && isPipe==0)
 				currWorDir();
-			}
 			else if(indexCmds==1 && isPipe==0){
 				if (strcmp(command[1],"..")==0)
 					changeDirectory();
 			}
 			//include wc( wc -l, wc -w, wc -c) man ,nano, cp
-			else if((indexCmds==2 || indexCmds==3 || indexCmds==4 || indexCmds==5 ) && isPipe==0){
-			execvp(command[0], command);
-			}
+			else if((indexCmds==2 || indexCmds==3 || indexCmds==4 || indexCmds==5 ) && isPipe==0)
+				execvp(command[0], command);
 			else if((indexCmds==6 || indexCmds==7) && isPipe==0){ // sort and sort -r
 				if(strlen(command[1])>2) // is sort
-				{
-                                      execlp("sort",command[0],command[1],NULL);
-				}				
+                                      execlp("sort",command[0],command[1],NULL);				
 				else if(strcmp(command[1],"-r")==0 && strlen(command[1])==2) //is sort -r
-				{	 				execlp("sort",command[0],command[1],command[2],NULL);
-				}
+					execlp("sort",command[0],command[1],command[2],NULL);
 				else
 					printf("'%s %s' command is not supported\n",command[0],command[1]); 
  				
 			}
 
 			else if((indexCmds==8 || indexCmds==9) && isPipe ==0){ //grep and grep -c
-
 				if(strlen(command[1])>2) //is grep
-				{
-
 					execlp("grep", command[0],command[1], command[2], NULL);
-				}
-				else if(strcmp(command[1],"-c")==0 && strlen(command[1])==2){ //is grep -c						
+				else if(strcmp(command[1],"-c")==0 && strlen(command[1])==2) //is grep -c						
 					execlp("grep", command[0],command[1], command[2],command[3], NULL);
-
-				}
 				else
 					printf("'%s %s' command is not supported\n",command[0],command[1]); 				
 			}
 			else if((indexCmds==10 || indexCmds==11) && isPipe ==0){ //cat and cat>
-				if(strlen(command[1])>2)//cat
-				{
-					
-				execlp("cat",command[0],command[1],NULL);
-				}
+				if(strlen(command[1])>2)//cat	
+					execlp("cat",command[0],command[1],NULL);
 				else if(strcmp(command[1],">")==0 && strlen(command[1])==1) //cat>
-				{
-
 					catCommand(command);
-  
-				}
 			}
 			else if (indexCmds==12){
 				if(child_pid == 0)
@@ -263,17 +239,14 @@ int main(int argc, char*argv[]){
 				printf("'%s' command is not supported\n",st);
 		}
 		
-		else {
-			
+		else 
 		    waitpid(child_pid, &stat_loc, WUNTRACED);
-		}
 
-        free(command);
+        	free(command);
 	
 	}
 
-return 0;
-
+	return 0;
 }
 
 
